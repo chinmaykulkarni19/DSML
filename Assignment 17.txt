@@ -1,0 +1,20 @@
+#Assignmnet 17
+#17. Compute Accuracy, Error rate, Precision, Recall for following confusion
+matrix ( Use formula for each)
+
+tp=1
+fp=1
+fn=8
+tn=90
+
+precision=tp/(tp+fp)
+precision
+
+accuracy=(tp+tn)/(tp+tn+fp+fn)
+accuracy
+
+recall=tp/(tp+fn)
+recall
+
+error=(fp+fn)/(tp+tn+fn+fp)
+error
