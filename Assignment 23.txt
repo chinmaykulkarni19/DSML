@@ -1,0 +1,61 @@
+#Assignmnet 23
+#With reference to Table , obtain the Frequency table for the
+attribute age. From the frequency table you have obtained, calculate the
+information gain of the frequency table while splitting on Age. (Use step
+by step Python/Pandas commands)
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sn
+import math
+
+df = pd.read_excel("Age Table.xlsx")
+df
+
+freqTable = pd.crosstab(df['Age'],df['Class'])
+lM = [freqTable["Yes"][0],freqTable["No"][0]]
+lO = [freqTable["Yes"][1],freqTable["No"][1]]
+lY1 = [freqTable["Yes"][2],freqTable["No"][2]]
+lY2 = [freqTable["Yes"][3],freqTable["No"][3]]
+T = [freqTable["Yes"].sum(),freqTable["No"].sum()]
+freqTable
+
+freqTable = pd.crosstab(df['Married'],df['Class'])
+freqTable
+
+freqTable = pd.crosstab(df['Health '],df['Class'])
+freqTable
+
+print(lM)
+print(lO)
+print(lY1)
+print(lY2)
+print(T)
+
+# Getting information gain for AGE
+
+# Functions
+
+def entropy(l) -> float:
+    total = l[0] + l[1]
+    if(l[0] == 0 or l[1] == 0):
+        return 0
+    else:
+        return -((l[0]/total)*math.log2(l[0]/total)+(l[1]/total)*math.log2(l[1]/total))
+
+TE = entropy(T)
+
+EM = entropy(lM)
+EY1 = entropy(lY1)
+EY2 = entropy(lY2)
+EO = entropy(lO)
+
+# information gain 
+
+totalElements = T[0] + T[1]
+
+infoGain = TE - (((lM[0] + lM[1])/totalElements)*EM + ((lY1[0] + lY1[1])/totalElements)*EY1 + ((lO[0] + lO[1])/totalElements)*EO + ((lY2[0] + lY2[1])/totalElements)*EY2)
+
+
+print(f"Info gain for age is : {infoGain}")
