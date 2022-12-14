@@ -1,0 +1,27 @@
+#Assignment 14
+#14. Use the covid_vaccine_statewise.csv dataset and perform the following
+analytics.
+A. Describe the dataset.
+B. Number of Males vaccinated
+C.. Number of females vaccinated
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv('covid_vaccine_statewise.csv')
+
+df.describe()
+
+df.head(10)
+
+df.tail(10)
+
+data = df[df['Male(Individuals Vaccinated)'].notnull()]
+data.describe()
+
+a =data.groupby('State')
+a['Male(Individuals Vaccinated)'].max()
+
+a['Female(Individuals Vaccinated)'].max()

@@ -1,0 +1,23 @@
+#Assignmnet 24
+#24. Perform the following operations using Python on a suitable data set,
+counting unique values of data, format of each column, converting variable
+data type (e.g. from long to short, vice versa), identifying missing values
+and filling in the missing values.
+
+import pandas as pd
+df=pd.read_csv("covid_19_india.csv")
+
+print(df.nunique())
+
+print(df.iloc[0:4])
+
+print(df.sort_values(['Cured','Deaths'], ascending=True))
+
+print(df.dtypes)
+
+df=df.astype({'Sno':'int32'})
+df=df.astype({'Cured':'int32'})
+df=df.astype({'Deaths':'int32'})
+df=df.astype({'Confirmed':'int32'})
+df=df.astype({'Date':'string'})
+print(df.dtypes)

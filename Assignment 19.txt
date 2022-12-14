@@ -1,0 +1,59 @@
+#Assignment 19
+#Write a Python program to display some basic statistical details like
+percentile, mean, standard deviation etc (Use python and pandas
+commands) the species of ‘Iris-setosa’, ‘Iris-versicolor’ and ‘Iris-versicolor’
+of iris.csv dataset.
+
+import pandas as pd
+df=pd.read_csv("Iris.csv")
+
+df
+
+import matplotlib.pyplot as plt
+plt.scatter(df['sepal_length'],df['petal_length'])
+
+from sklearn.cluster import KMeans
+kn=KMeans(n_clusters=3)
+kn
+
+y_pred=kn.fit_predict(df[['sepal_length','petal_length']])
+y_pred
+
+import seaborn as sns
+sns.pairplot(df)
+
+pd.crosstab(index=df['species'],columns='count',dropna=True)
+
+#for the 50th percentile
+print(df.quantile(q=[0.5]))
+
+
+print('Iris-setosa')
+setosa = df['species'] == 'Iris-setosa'
+print(df[setosa].describe())
+print('\nIris-versicolor')
+setosa = df['species'] == 'Iris-versicolor'
+print(df[setosa].describe())
+print('\nIris-virginica')
+setosa = df['species'] == 'Iris-virginica'
+print(df[setosa].describe())
+
+
+import numpy as np
+
+iris_setosa = df.loc[df.species == "Iris-setosa"]
+iris_versicolor = df.loc[df.species == "Iris-versicolor"]
+iris_virginica = df.loc[df.species == "Iris-virginica"]
+print("Setosa mean: ", np.mean(iris_setosa['petal_length']))
+print("versicolor mean: ", np.mean(iris_versicolor['petal_length']))
+print("virginica mean: ",  np.mean(iris_virginica['petal_length']))
+print()
+print("Setosa variance: ", np.var(iris_setosa['petal_length']))
+print("versicolor variance: ", np.var(iris_versicolor['petal_length']))
+print("virginica variance: ", np.var(iris_virginica['petal_length']))
+print() 
+print("Setosa std: ", np.std(iris_setosa['petal_length']))
+print("versicolor std: ", np.std(iris_versicolor['petal_length']))
+print("virginica std: ", np.std(iris_virginica['petal_length']))
+
+df['petal_length'].max()

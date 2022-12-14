@@ -1,0 +1,135 @@
+# Assignment 9
+#9. Write a program to do the following: You have given a collection of 8
+points. P1=[0.1,0.6] P2=[0.15,0.71] P3=[0.08,0.9] P4=[0.16, 0.85]
+P5=[0.2,0.3] P6=[0.25,0.5] P7=[0.24,0.1] P8=[0.3,0.2]. Perform the k-mean
+clustering with initial centroids as m1=P1 =Cluster#1=C1 and
+m2=P8=cluster#2=C2. Answer the following 1] Which cluster does P6
+belong to? 2] What is the population of a cluster around m2? 3] What is
+the updated value of m1 and m2?
+
+import pandas as pd
+import numpy as np
+import matplotlib.pylab as plt
+import seaborn as sns
+
+datapoints = {
+    'Points': ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'],
+    'x_cords': [0.1, 0.15, 0.07, 0.16, 0.2, 0.25, 0.24, 0.3],
+    'y_cords': [0.6, 0.71, 0.9, 0.85, 0.3, 0.5, 0.1, 0.2]
+}
+
+df = pd.DataFrame(datapoints, columns=['Points', 'x_cords', 'y_cords'])
+df
+
+plt.scatter(x=df['x_cords'], y=df['y_cords'], c='#964156')
+plt.xlabel('X-Coordinates')
+plt.ylabel('Y-Coordinates')
+plt.title('Scatter Plot of Coordinates')
+plt.show
+
+import math
+def eucledian_distance(x1,y1,x2,y2):
+    return math.sqrt((x1-x2)**2+(y1-y2)**2)
+
+def manhattan_distance(x1,y1,x2,y2):
+    return math.fabs(x1-x2)+math.fabs(y1-y2)
+
+def returnCluster(m1,m2,x_co,y_co):
+
+    distance1=manhattan_distance(m1[0],m1[1],x_co,y_co)  
+    distance2=manhattan_distance(m2[0],m2[1],x_co,y_co)
+    
+    if(distance1<distance2):
+        return 1;
+    else:
+        return 2;
+
+import math
+# initial centroids
+# for cluster1= nd cluster 2
+m1=[df['x_cords'][0], df['y_cords'][0]]
+m2=[df['x_cords'][7], df['y_cords'][7]]
+
+
+#difference and iteration is for controlling iteration
+difference = math.inf
+threshold=0.02
+iteration=0;
+
+while iteration<5: #use any one condition #iteration one is easy
+    print("Iteration No. ",iteration, ":  m1=",m1, "  m2=",m2)
+    cluster1=[];
+    cluster2=[];
+    
+    #step1 assign all points to nearest cluster
+    for i in range(0,len(df.index)):
+        clusterNumber=returnCluster(m1,m2,df['x_cords'][i], df['y_cords'][i])
+        
+        point=[df['x_cords'][i], df['y_cords'][i]]
+        if clusterNumber==1:
+            cluster1.append(point);
+        else:
+            cluster2.append(point)
+        
+    print("Cluster 1", cluster1,"\nCLuster 2: ", cluster2)
+    
+    #step 2: Calculating new centriod for cluster1
+    m1_old=m1;
+    m1=[]
+    m1=np.mean(cluster1, axis=0) #axis=0 means columnwise 
+    
+    #calculating centroid for cluster2
+    m2_old=m2;
+    m2=[];
+    m2=np.mean(cluster2,axis=0)
+    print("m1 = ",m1," m2=",m2)
+    
+    #adjusting differences of adjustment between m1 nd m1_old
+    xAvg=0.0;
+    yAvg=0.0;
+    xAvg=math.fabs(m1[0]-m1_old[0])+math.fabs(m2[0]-m2_old[0])
+    xAvg=xAvg/2;
+    
+    yAvg=math.fabs(m1[1]-m1_old[1])+math.fabs(m2[1]-m2_old[1])
+    yAvg=yAvg/2;
+    
+    if(xAvg>yAvg):
+        difference=xAvg;
+    else:
+        difference=yAvg;
+        
+    print("Difference  : ", difference)
+    iteration+=1;
+    print("")
+
+#final Output
+print("Cluster 1 centroid : m1 = ",m1)
+print("CLuster 1 points: ", cluster1)
+print("Cluster 2 centroid : m2 = ",m2)
+print("CLuster 2 points: ", cluster2)
+
+clust1=np.array(cluster1)
+clust2=np.array(cluster2)
+
+#cluster 1 points
+plt.plot(clust1[:,0],clust1[:,1],"o")
+
+#cluster2 points
+plt.plot(clust2[:,0], clust2[:,1],"*")
+
+#centroids
+plt.plot([m1[0],m2[0]],[m1[1],m2[1]],"^")
+plt.show()
+
+# a)  Which cluster does P6 belongs to?
+clusterP6 = returnCluster(m1,m2,df['x_cords'][5], df['y_cords'][5])
+print("Cluster of P6:", clusterP6)
+
+# b) What is the population of cluster around m2?
+print("Population of Cluster 2: ", len(clust2))
+
+# c) What is updated value of m1 and m2?
+print("Cluster 1 centroid : m1 = ",m1)
+print("Cluster 2 centroid : m2 = ",m2)
+
+

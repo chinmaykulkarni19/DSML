@@ -1,0 +1,22 @@
+#Assignment 22
+#22. Compute Accuracy, Error rate, Precision, Recall for the following
+confusion matrix.
+
+cancer 90 210 300
+
+tp=90
+fn=210
+fp=140
+tn=9560
+
+precision=tp/(tp+fp)
+precision
+
+accuracy=(tp+tn)/(tp+tn+fp+fn)
+accuracy
+
+recall=tp/(tp+fn)
+recall
+
+error=(fp+fn)/(tp+tn+fn+fp)
+error

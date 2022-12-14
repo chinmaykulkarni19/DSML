@@ -1,0 +1,20 @@
+#Assignment 3
+#Perform the following operations using Python on the data set
+House_Price Prediction dataset. Compute standard deviation, variance and
+percentiles using separate commands, for each feature. Create a histogram
+for each feature in the dataset to illustrate the feature distributions.
+
+import numpy as np
+import pandas as pd
+
+data = pd.read_csv("Dataset/house_price_prediction.csv")
+
+#print variance
+data.var()
+
+np.std(data,axis=0) #calculate standrad deviation for each column
+
+np.std(data,axis=1) #calculate standrad deviation for each row
+
+#percentile
+data.price.quantile(0.1)

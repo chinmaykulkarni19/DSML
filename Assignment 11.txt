@@ -1,0 +1,49 @@
+# Assignment 11
+# 11. Use Iris flower dataset and perform following :
+1. List down the features and their types (e.g., numeric, nominal)
+available in the dataset. 2. Create a histogram for each feature in the
+dataset to illustrate the feature distributions.
+
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv("iris-flower-dataset.csv",header=None)
+df.columns = ["col1","col2","col3","col4","col5"]
+
+df.head()
+
+#Q1. How many features are there and what are their types?
+
+column = len(list(df))
+column
+
+#Clearly, dataset has 5 column indicating 5 features about the data
+df.info()
+
+np.unique(df["col5"])
+
+#Q2. Compute and display summary statistics for each feature available in the dataset.
+df.describe()
+
+#Q3. Data Visualization-Create a histogram for each feature in the dataset to illustrate the feature distributions. Plot each histogram.
+
+import seaborn as sns
+import matplotlib
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+fig, axes = plt.subplots(2, 2, figsize=(16, 8))
+
+
+axes[0,0].set_title("Distribution of First Column")
+axes[0,0].hist(df["col1"]);
+
+axes[0,1].set_title("Distribution of Second Column")
+axes[0,1].hist(df["col2"]);
+
+axes[1,0].set_title("Distribution of Third Column")
+axes[1,0].hist(df["col3"]);
+
+axes[1,1].set_title("Distribution of Fourth Column")
+axes[1,1].hist(df["col4"])
+

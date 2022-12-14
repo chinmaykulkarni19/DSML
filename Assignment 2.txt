@@ -1,0 +1,53 @@
+# Assignment- 3
+# Perform the following operations using Python on the Telecom_Churn
+# dataset. Compute and display summary statistics for each feature available
+# in the dataset using separate commands for each statistic. (e.g. minimum
+# value, maximum value, mean, range, standard deviation, variance and
+# percentiles).
+
+import numpy as np
+from scipy.stats import iqr
+import pandas as pd
+
+data = pd.read_csv("Dataset/telecom_churn.csv")
+
+print(data.shape)
+
+print(data.info())
+
+data
+
+data.min()
+
+data.max()
+
+#mean value of all attribute
+data.mean()
+
+#mean value of individual attribite for coluumn
+data.loc[:,'account length'].mean()
+
+#mean value for first five lines
+data.mean(axis = 1)[0:5]
+
+#median value of all attribute
+data.median()
+
+data.loc[:, 'area code'].median()
+
+data.median(axis=1)[0:5]
+
+data.mode()
+
+data.std()
+
+data.std(axis = 0)[1:5]
+
+print(data.loc[:,'area code'].std())
+
+data.var()
+
+#Interquartile Range (IQR)
+# The Interquartile Range (IQR) is a measure of statistical dispersion, and is calculated as the difference 
+# between the upper quartile (75th percentile) and the lower quartile (25th percentile).
+iqr(data['area code'])

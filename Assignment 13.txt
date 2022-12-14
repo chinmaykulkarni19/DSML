@@ -1,0 +1,53 @@
+# Assignment 13
+#13. Use the covid_vaccine_statewise.csv dataset and perform the following
+analytics.
+a. Describe the dataset
+b. Number of persons state wise vaccinated for first dose in India
+c. Number of persons state wise vaccinated for second dose in India
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('covid_vaccine_statewise.csv')
+data.head()
+
+data.describe()
+
+data['State'].unique()
+
+data.isna().sum()
+
+data['Total Doses Administered'] = data['Total Doses Administered'].astype('int64')
+data['First Dose Administered'] = data['First Dose Administered'].astype('int64')
+data['Second Dose Administered'] = data['Second Dose Administered'].astype('int64')
+
+data.fillna(0, inplace=True)
+data.isna().sum()
+
+data.dtypes
+
+dict = {}
+for state in data['State'].unique():
+    dict[state] = 0
+for i in range(data.shape[0]):
+    dict[data['State'].iloc[i]] += data['First Dose Administered'].iloc[i]
+
+print(dict)
+
+dict2 = {}
+for state in data['State'].unique():
+    dict2[state] = 0
+for i in range(data.shape[0]):
+    dict2[data['State'].iloc[i]] += data['Second Dose Administered'].iloc[i]
+
+print(dict2)
+
+dict3 = {}
+for state in data['State'].unique():
+    dict3[state] = 0
+for i in range(data.shape[0]):
+    dict3[data['State'].iloc[i]] += data['Total Doses Administered'].iloc[i]
+
+print(dict3)

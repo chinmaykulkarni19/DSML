@@ -1,0 +1,57 @@
+# ASSIGNMENT 1
+# Perform the following operations using Python on a data set : read data
+# from different formats(like csv, xls),indexing and selecting data, sort data,
+# describe attributes of data, checking data types of each column. (Use
+# Titanic Dataset).
+
+import numpy as np
+import pandas as pd
+
+data = pd.read_csv("Dataset/titanic.csv")
+
+#Read Data From Different Formats
+
+data
+
+data.head()
+
+data.head(15)
+
+data.tail(8)
+
+#indexing and selecting data
+# Indexing only State from the dataset
+
+data['Name']
+
+# Indexing State and Deaths
+data[['Name', 'Fare']]
+
+# Selecting the slice of dataframe, exclusive end
+data[2: 8]
+
+# Indexing rows 2 to 10 for State And ConfirmedIndianNational
+data.loc[2: 10, ['Name', 'Fare']]
+
+#Sorting Data Values
+
+#sorting data by row index or column label
+
+data.sort_index()
+
+#sorting by state name in ascending order
+data.sort_values("Name")
+
+#sorting by state name in ascending order
+data.sort_values('Name',ascending=False)
+
+#sorting with multiple columns
+data.sort_values(by=['Name','Pclass'])
+
+#describe attributes of data
+data.describe()
+
+data.info()
+
+#checking data types of each column
+data.dtypes

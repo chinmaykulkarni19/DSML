@@ -1,0 +1,62 @@
+#Assignmnet 25
+#Perform Data Cleaning, Data transformation using Python on any data
+set.
+
+import pandas as pd
+df=pd.read_csv("covid_19_india.csv")
+
+print(df)
+
+#detecting NA values
+df.isnull()
+
+import numpy as np
+missing_values=["N/a","na",np.nan,0]
+df=pd.read_csv("covid_19_india.csv",na_values=missing_values)
+df
+
+df.isnull()
+
+df.isnull().sum()
+
+import seaborn as sns
+sns.heatmap(df.isnull(),yticklabels=False)
+
+#removing NA values
+df.dropna()
+
+df.dropna(how='all')
+
+#filling data
+df.fillna(0)
+
+df_next=df.fillna(method='bfill')
+df_next
+
+df.interpolate()
+
+#transforming data
+df.drop(['Date','Time'],axis=1)
+
+from pandas import DataFrame
+series_obj=Series(np.arange(6))
+series_obj.name="added_variable"
+series_obj
+
+added=DataFrame.join(df,series_obj)
+added
+
+#sorting
+print(df_next.sort_values(['Cured','Confirmed'], ascending=True))
+
+import matplotlib.pyplot as plt
+x=df_next['Confirmed']
+plt.hist(x,bins=25,color='green',edgecolor='blue',alpha=0.5)
+plt.title("Histogram")
+plt.xlabel('Cured')
+plt.ylabel('Deaths')
+
+x=df['Cured']
+y=df['Deaths']
+plt.scatter(x,y,c=df['Cured'], s=df['Deaths'],marker='D',alpha=0.4)
+
