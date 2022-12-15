@@ -1,0 +1,32 @@
+#Assignmnet 15
+#15. Use the dataset 'titanic'. The dataset contains 891 rows and contains
+information about the passengers who boarded the unfortunate Titanic
+ship. Use the Seaborn library to see if we can find any patterns in the data.
+
+import pandas as pd
+import numpy as np
+import seaborn as sn
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("Titanic.csv")
+df
+
+## Comapring Fare
+sn.barplot(x=df['Sex'],y=df['Fare'])
+plt.show()
+
+## Survied or Not Survived
+labels = ['Survived', 'Died']
+data = [df[df['Survived'] == 1].count()[0],df[df['Survived'] == 0].count()[0]]
+plt.pie(data, labels = labels,colors=sn.color_palette('rocket'),autopct='%.0f%%')
+plt.show()
+
+## Different Age groups travelled in Titanic
+data = [df[df['Age'] <= 19].count()[0],df[(20 <= df['Age']) & (df['Age'] <= 50)].count()[0],df[df['Age'] > 50].count()[0]]
+labels = ["The Childrens","The Young","The Old"]
+sn.barplot(y=labels,x=data)
+plt.show()
+
+## Histogram of fare
+sn.histplot(data=df['Fare'],color='navy',bins=5,alpha=1)
+plt.show()
