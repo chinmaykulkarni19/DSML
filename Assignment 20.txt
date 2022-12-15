@@ -1,0 +1,36 @@
+#Assignmnet 20
+20. Write a program to cluster a set of points using K-means for IRIS
+dataset. Consider, K=3, clusters. Consider Euclidean distance as the
+distance measure. Randomly initialize a cluster mean as one of the data
+points. Iterate at least for 10 iterations. After iterations are over, print the
+final cluster means for each of the clusters.
+
+import pandas as pd
+import numpy as np
+from sklearn.cluster import KMeans
+import seaborn
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('iris_csv.csv')
+df
+
+# Building our model
+Y = df['class']
+X = df.drop(columns=['class'])
+
+clustering = KMeans(n_clusters=3,random_state=3,max_iter=10)
+clustering.fit(X)
+
+# Plotting the graph
+
+colorArr = np.array(['g','r','b','m'])
+plt.scatter(x=X.sepallength,y=X.sepalwidth,c=colorArr[clustering.labels_])
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.show()
+
+colorArr = np.array(['g','r','b','m'])
+plt.scatter(x=X.petallength,y=X.petalwidth,c=colorArr[clustering.labels_])
+plt.xlabel("Petal Length")
+plt.ylabel("Petal Width")
+plt.show()
