@@ -1,0 +1,56 @@
+#Assignmnet 5
+#5. Write a program to do: A dataset collected in a cosmetics shop showing
+details of customers and whether or not they responded to a special offer
+to buy a new lip-stick is shown in table below. (Use library commands)
+According to the decision tree you have made from the previous training
+data set, what is the decision for the test data: [Age < 21, Income = Low,
+Gender = Female, Marital Status = Married]?
+
+import numpy as np
+import pandas as pd
+
+data=pd.read_csv("sales.csv")  #P.s. Check dataset values with problem statement input data
+
+data.describe()
+
+#data.groupby('Age').count()
+
+#data.apply(pd.value_counts)
+data['Buys'].value_counts()
+
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder();
+#data=data.apply(le.fit_transform)
+x=data.iloc[:,:-1] #-1 means don't take last column 
+x=x.apply(le.fit_transform)
+#find label with their encoded value
+print("Age with encodd value :",list( zip(data.iloc[:,0], x.iloc[:,0])))
+print("\nIncome with encoded value :",list( zip(data.iloc[:,1], x.iloc[:,1])))
+print("\nGender with encoded value :",list( zip(data.iloc[:,2], x.iloc[:,2])))
+print("\nmaritialStatus with encoded value :",list( zip(data.iloc[:,3], x.iloc[:,3])))
+
+#Store labels in Y
+y=data.iloc[:,-1]
+
+from sklearn.tree import DecisionTreeClassifier
+classifier=DecisionTreeClassifier(criterion='entropy')
+classifier.fit(x,y)
+
+#Predict value for the given Expression
+#[Age < 21, Income = Low,Gender = Female, Marital Status = Married]
+test_x=np.array([1,1,0,0])
+pred_y=classifier.predict([test_x])
+print("Predicted class for input [Age < 21, Income = Low,Gender = Female, Marital Status = Married]\n", test_x," is ",pred_y[0])
+
+#method to generate graph p.s. needs dot utility installed in os
+from sklearn.tree import export_graphviz
+from IPython.display import Image
+export_graphviz(classifier,out_file="data.dot",feature_names=x.columns,class_names=["No","Yes"])
+#you need to install graphviz in fedora(IN LAB) for running below dor command
+#yum install graphviz
+
+#then go to terminal and cd to directory where you are saving jupyter notebook
+# and execute below command
+#    dot -Tpng data.dot -o tree.png
+!dot -Tpng data.dot -o tree.png
+Image("tree.png")
