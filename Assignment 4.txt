@@ -1,0 +1,267 @@
+#Assignmnet 4
+#Write a program to do: A dataset collected in a cosmetics shop showing
+details of customers and whether or not they responded to a special offer
+to buy a new lip-stick is shown in table below. (Implement step by step
+using commands - Dont use library) Use this dataset to build a decision
+tree, with Buys as the target variable, to help in buying lipsticks in the
+future. Find the root node of the decision tree.
+
+import numpy as np
+from numpy import log2 as log
+
+import pandas as pd
+
+data=pd.read_csv("Decision.csv")
+
+data
+
+#data= data.drop('Id',axis=1)
+data
+
+count=data.count()
+print(count)
+
+print("Dataset length: ",len(data))
+print("Dataset shape: ",data.shape)
+
+data.describe()
+
+data['Buys'].value_counts()
+
+#FUNCTION TO FIND ENTROPY VALUE
+def Entropy(data):
+    d=data.iloc[:,-1]
+    d=d.value_counts()
+    s=0
+    for v in d.keys():
+        p=d[v]/sum(d)
+        s-=p*np.log2(p)
+    return(s)
+
+Entropy(data)
+
+#ENTROPY OF MALE
+#S_male=-(((count_male/male)*np.log2(count_male/male))+((cm/male)*np.log2(cm/male)))
+S_male=Entropy(data.loc[data['Gender']=='Male'])
+print(S_male)
+
+#ENTROPY OF FEMALE
+S_female=Entropy(data.loc[data['Gender']=='Female'])
+print(S_female)
+
+df=data[data[['Gender','Buys']].eq('Yes').any(1)]
+print(df)
+
+df=data.loc[data['Buys']=='Yes','Gender']
+print(df)
+
+#COUNT OF YES,NO FOR MALE
+count_male=sum(df=='Male')
+print(count_male)
+cm=male-count_male
+print(cm)
+
+#COUNT OF YES,NO FOR FEMALE
+count_female=sum(df=='Female')
+print(count_female)
+cf=female-count_female
+print(cf)
+
+#INFORMATION GAIN FOR GENDER
+gain_gender=Entropy(data)-(((count_male/14)*S_male)+((count_female/14)*S_female))
+print(gain_gender)
+
+#ENTROPY FOR HIGH
+S_high=Entropy(data.loc[data['Income']=='High'])
+print(S_high)
+
+#ENTROPY FOR MEDIUM
+S_medium=Entropy(data.loc[data['Income']=='Medium'])
+print(S_medium)
+
+#ENTROPY FOR LOW
+S_low=Entropy(data.loc[data['Income']=='Low'])
+print(S_low)
+
+i=data[['Income','Buys']]
+print(i)
+
+ic=data['Income'].value_counts()
+print(ic)
+
+medium=sum(data['Income']=='Medium')
+print(medium)
+
+high=sum(data['Income']=='High')
+print(high)
+
+low=sum(data['Income']=='Low')
+print(low)
+
+df1=data.loc[data['Buys']=='Yes','Income']
+print(df1)
+
+#COUNT OF YES,NO FOR MEDIUM
+count_medium=sum(df1=='Medium')
+print(count_medium)
+cm1=medium-count_medium
+print(cm1)
+
+#COUNT OF YES,NO FOR HIGH
+count_high=sum(df1=='High')
+print(count_high)
+ch=high-count_high
+print(ch)
+
+#COUNT OF YES,NO FOR LOW
+count_low=sum(df1=='Low')
+print(count_high)
+cl=low-count_low
+print(cl)
+
+#INFORMATION GAIN FOR INCOME
+gain_income=Entropy(data)-(((count_medium/14)*S_medium)+((count_high/14)*S_high)+((count_low/14)*S_low))
+print(gain_income)
+
+#ENTROPY FOR <21
+S_lt21=Entropy(data.loc[data['Age']=='<21'])
+print(S_lt21)
+
+#ENTROPY FOR 21-35
+S=Entropy(data.loc[data['Age']=='21-35'])
+print(S)
+
+#ENTROPY FOR >35
+S_gt35=Entropy(data.loc[data['Age']=='>35'])
+print(S_gt35)
+
+df2=data.loc[data['Buys']=='Yes','Age']
+print(df2)
+
+#COUNT OF YES,NO FOR <21
+count_lt21=sum(df2=='<21')
+print(count_lt21)
+
+#COUNT OF YES,NO FOR 21-35
+count_b=sum(df2=='21-35')
+print(count_b)
+
+#COUNT OF YES,NO FOR >35
+count_gt35=sum(df2=='>35')
+print(count_gt35)
+
+#INFORMATION GAIN FOR AGE
+gain_age=Entropy(data)-(((count_lt21/14)*S_lt21)+((count_b/14)*S)+((count_gt35/14)*S_gt35))
+print(gain_age)
+
+#FINDING ROOT NODE BY ABOVE CALCULATIONS
+root=max(gain_age,gain_income,gain_gender)
+print(root) #AGE IS ROOT NODE
+
+if(root==gain_age):
+    print("Age is root node")
+elif(root==gain_income):
+    print("Income is root node")
+else:
+    print("Gender is root node")
+
+def find_entropy(data):
+    Class = data.keys()[-1]   #To make the code generic, changing target variable class name
+    entropy = 0
+    values = data[Class].unique()
+    for value in values:
+        fraction = data[Class].value_counts()[value]/len(data[Class])
+        entropy += -fraction*np.log2(fraction)
+    return entropy
+
+eps = np.finfo(float).eps
+
+#Find entropy of the attribute (Each Columns)
+def find_entropy_attribute(data,attribute):
+    Class = data.keys()[-1]   #To make the code generic, changing target variable class name
+    target_variables = data[Class].unique()  #This gives all 'Yes' and 'No'
+    variables = data[attribute].unique()    #This gives different features in that attribute (like 'Hot','Cold' in Temperature)
+    entropy2 = 0
+    for variable in variables:
+        entropy = 0
+        for target_variable in target_variables:
+            num = len(data[attribute][data[attribute]==variable][data[Class] ==target_variable])
+            den = len(data[attribute][data[attribute]==variable])
+            fraction = num/(den+eps)
+            entropy += -fraction*log(fraction+eps)
+        fraction2 = den/len(data)
+        entropy2 += -fraction2*entropy
+    return abs(entropy2)
+
+# FInd the Root Node
+def find_winner(data):
+    Entropy_att = []
+    IG = []
+    for key in data.keys()[:-1]:
+#Entropy_att.append(find_entropy_attribute(data,key))
+        IG.append(find_entropy(data)-find_entropy_attribute(data,key))
+    return data.keys()[:-1][np.argmax(IG)]
+
+# Find the leaf Nodes
+def get_subtable(data, node,value):
+    return data[data[node] == value].reset_index(drop=True)
+
+# Build Tree
+def buildTree(data,tree=None): 
+    Class = data.keys()[-1]   #To make the code generic, changing target variable class name
+    
+    #Here we build our decision tree
+
+    #Get attribute with maximum information gain
+    node = find_winner(data)
+    
+    #Get distinct value of that attribute e.g Salary is node and Low,Med and High are values
+    attValue = np.unique(data[node])
+    
+    #Create an empty dictionary to create tree    
+    if tree is None:                    
+        tree={}
+        tree[node] = {}
+    
+   #We make loop to construct a tree by calling this function recursively. 
+    #In this we check if the subset is pure and stops if it is pure. 
+
+    for value in attValue:
+        
+        subtable = get_subtable(data,node,value)
+        clValue,counts = np.unique(subtable['Buys'],return_counts=True)                        
+        
+        if len(counts)==1:#Checking purity of subset
+            tree[node][value] = clValue[0]                                                    
+        else:        
+            tree[node][value] = buildTree(subtable) #Calling the function recursively 
+                   
+    return tree
+
+
+#Check the function
+tree = buildTree(data)
+
+#DECISION TREE
+tree
+
+#algorithm to predict using this tree structure
+def predict(inst,tree):
+    #This function is used to predict for any input variable 
+    
+    #Recursively we go through the tree that we built earlier
+
+    for nodes in tree.keys():        
+        
+        value = inst[nodes]
+        tree = tree[nodes][value]
+        prediction = 0
+            
+        if type(tree) is dict:
+            prediction = predict(inst, tree)
+        else:
+            prediction = tree
+            break;                            
+        
+    return prediction
+
